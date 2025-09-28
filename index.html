@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Hub - Modern</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root[data-theme="dark"] {
+            --bg-primary: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 50%, #2d1b69 100%);
+            --bg-card: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent: #00d4ff;
+            --accent-hover: #00b8e6;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        :root[data-theme="neon"] {
+            --bg-primary: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #330066 100%);
+            --bg-card: rgba(255, 0, 255, 0.1);
+            --text-primary: #ff00ff;
+            --text-secondary: #cc00cc;
+            --accent: #00ffff;
+            --accent-hover: #ff00ff;
+            --border: rgba(255, 0, 255, 0.3);
+            --shadow: rgba(255, 0, 255, 0.2);
+        }
+
+        :root[data-theme="ocean"] {
+            --bg-primary: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%);
+            --bg-card: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --accent: #06b6d4;
+            --accent-hover: #0891b2;
+            --border: rgba(255, 255, 255, 0.2);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Theme Controls */
+        .theme-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .theme-selector {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .theme-selector:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .theme-creator-btn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Music Player - Spotify Style */
+        .music-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .music-player.visible {
+            transform: translateY(0);
+        }
+
+        .music-player.collapsed {
+            transform: translateY(calc(100% - 80px));
+        }
+
+        .music-player.collapsed .track-info,
+        .music-player.collapsed .progress-container,
+        .music-player.collapsed .volume-controls {
+            display: none;
+        }
+
+        .track-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .track-art {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .track-details {
+            min-width: 0;
+        }
+
+        .track-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-artist {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-card);
+            transform: scale(1.1);
+        }
+
+        .play-btn {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 35px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .volume-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: flex-end;
+            z-index: 1999; /* Lower than music toggle button */
+        }
+
+        .volume-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 2001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content, .history-content, .theme-creator-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Project Modal Styles */
+        .project-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+
+        .project-modal-header {
+            background: linear-gradient(135deg, var(--accent), #00b8e6);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .project-modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .project-modal-body {
+            padding: 2rem;
+            background: #1a1a1a;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .project-modal-description {
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .project-modal-button, .project-modal-buttons {
+            display: block;
+            width: 100%;
+        }
+
+        .project-modal-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .project-modal-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .project-modal-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* History Modal Styles */
+        .history-header {
+            background: linear-gradient(135deg, var(--accent), var(--text-primary));
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .history-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .history-body {
+            padding: 2rem;
+        }
+
+        .history-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .history-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .history-btn {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .history-btn:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .history-btn-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .history-btn-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-btn-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Theme Creator Styles */
+        .color-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .color-input-group label {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .color-input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .theme-preview {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .custom-theme-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        /* Home Page Styles */
+        .home-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent), var(--text-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .nav-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Portfolio Page Styles */
+        .portfolio-container {
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .portfolio-hero {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .portfolio-content {
+            max-width: 700px;
+        }
+
+        .portfolio-greeting {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .portfolio-name {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .portfolio-subtitle {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            line-height: 1.1;
+            min-height: 4.5rem;
+        }
+
+        .portfolio-subtitle::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: var(--accent);
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .portfolio-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .social-icons, .skills-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon, .skill-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover, .skill-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .profile-photo {
+            width: 350px;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .portfolio-sections {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px var(--shadow);
+        }
+
+        .project-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .project-category {
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .project-likes {
+            color: white;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .nav-grid { grid-template-columns: 1fr; }
+            .portfolio-hero { 
+                grid-template-columns: 1fr; 
+                text-align: center; 
+                gap: 2rem;
+            }
+            .portfolio-name, .portfolio-subtitle { font-size: 2.5rem; }
+            .profile-photo { width: 280px; height: 350px; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="theme-controls">
+        <select class="theme-selector" id="themeSelector">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="neon">Neon</option>
+            <option value="ocean">Ocean</option>
+            <option value="custom">Custom</option>
+        </select>
+        <button class="theme-creator-btn" onclick="openThemeCreator()">Create Theme</button>
+    </div>
+
+    <div id="mainContent">
+        <!-- Content will be loaded here -->
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="project-modal">
+        <div class="project-modal-content">
+            <button class="close-btn" onclick="closeProjectModal()">&times;</button>
+            <div class="project-modal-header">
+                <h2 class="project-modal-title" id="projectModalTitle">Project Title</h2>
+                <p class="project-modal-subtitle" id="projectModalSubtitle">Project subtitle</p>
+            </div>
+            <div class="project-modal-body">
+                <p class="project-modal-description" id="projectModalDescription">Project description goes here.</p>
+                <div id="projectModalActions">
+                    <!-- Actions will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Project Modal -->
+    <div id="historyModal" class="modal">
+        <div class="history-content">
+            <div class="history-header">
+                <button class="close-btn" onclick="closeHistoryModal()">&times;</button>
+                <h2 class="history-title">Canadian History</h2>
+                <p class="history-subtitle">A comprehensive historical exploration</p>
+            </div>
+            <div class="history-body">
+                <p class="history-description">
+                    Explore Canada's rich history through multiple formats. This project includes 
+                    detailed research, visual presentations, and interactive materials covering 
+                    key moments in Canadian history from confederation to modern times.
+                </p>
+                <div class="history-buttons">
+                    <a href="https://github.com/GSDhaliwal05/clarkpass/raw/main/brochure.pdf" class="history-btn" target="_blank">
+                        <i class="fas fa-book history-btn-icon"></i>
+                        <div class="history-btn-title">Brochure</div>
+                        <div class="history-btn-desc">The Canadian History brochure, ready for all things history</div>
+                    </a>
+                    <a href="https://www.canva.com/design/DAG0H8hKWsI/aKSA3yOECUVXyRaSkA1E8A/edit?utm_content=DAG0H8hKWsI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" class="history-btn" target="_blank">
+                        <i class="fas fa-presentation history-btn-icon"></i>
+                        <div class="history-btn-title">Presentation</div>
+                        <div class="history-btn-desc">This is my presentation on Canadian History</div>
+                    </a>
+                    <a href="https://github.com/brosmad123/classroomresources/blob/main/canadian-history-merged.pdf" class="history-btn" target="_blank">
+                        <i class="fas fa-file-alt history-btn-icon"></i>
+                        <div class="history-btn-title">Worksheet</div>
+                        <div class="history-btn-desc">This is for students to fill out after the presentation</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Creator Modal -->
+    <div id="themeCreatorModal" class="modal">
+        <div class="theme-creator-content">
+            <button class="close-btn" onclick="closeThemeCreator()">&times;</button>
+            <div style="padding: 2rem;">
+                <h2 style="color: var(--text-primary); margin-bottom: 2rem;">Create Custom Theme</h2>
+                
+                <div class="color-input-group">
+                    <label for="bgPrimary">Background Start Color:</label>
+                    <input type="color" id="bgPrimary" class="color-input" value="#0f0f23">
+                </div>
+                
+                <div class="color-input-group">
+                    <label for="bgSecondary">Background End Color:</label>
+                    <input type="color" id="bgSecondary" class="color-input" value="#2d1b69">
+                </div>
+                
+                <div class="color-input-group">
+                    <label for="textPrimary">Primary Text Color:</label>
+                    <input type="color" id="textPrimary" class="color-input" value="#ffffff">
+                </div>
+                
+                <div class="color-input-group">
+                    <label for="textSecondary">Secondary Text Color:</label>
+                    <input type="color" id="textSecondary" class="color-input" value="#b3b3b3">
+                </div>
+                
+                <div class="color-input-group">
+                    <label for="accentColor">Accent Color:</label>
+                    <input type="color" id="accentColor" class="color-input" value="#00d4ff">
+                </div>
+                
+                <div class="theme-preview" id="themePreview">
+                    <h3>Theme Preview</h3>
+                    <p>This is how your theme will look</p>
+                </div>
+                
+                <div class="custom-theme-actions">
+                    <button class="btn btn-secondary" onclick="closeThemeCreator()">Cancel</button>
+                    <button class="btn btn-primary" onclick="applyCustomTheme()">Apply Theme</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="https://raw.githubusercontent.com/brosmad123/classroomresources/main/music1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="backgroundMusic2" loop>
+        <source src="https://raw.githubusercontent.com/brosmad123/classroomresources/main/music2.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Music playlist using your GitHub files
+        const musicTracks = [
+            {
+                title: "Ambient Track 1",
+                src: "https://raw.githubusercontent.com/brosmad123/classroomresources/main/music1.mp3"
+            },
+            {
+                title: "Ambient Track 2", 
+                src: "https://raw.githubusercontent.com/brosmad123/classroomresources/main/music2.mp3"
+            },
+            {
+                title: "Ambient Track 3",
+                src: "https://raw.githubusercontent.com/brosmad123/classroomresources/main/music3.mp3"
+            },
+            {
+                title: "Ambient Track 4",
+                src: "https://raw.githubusercontent.com/brosmad123/classroomresources/main/music4.mp3"
+            },
+            {
+                title: "Ambient Track 5",
+                src: "https://raw.githubusercontent.com/brosmad123/classroomresources/main/music5.mp3"
+            }
+        ];
+
+        // Portfolio Data
+        const portfolioData = {
+            gurshaan: {
+                name: "Gurshaan Gill",
+                greeting: "WELCOME TO A NEW WORLD",
+                fullName: "Hi, I'm Gurshaan Gill, a",
+                typingTexts: ["Developer.", "Writer.", "Creator."],
+                description: "Hello, I am a 13-year-old kid, my birthday is June 22nd, 2025. I have been developing with HTML for a year, with my general development starting in 2022.",
+                avatar: "https://i.ibb.co/j9KcHq5y/Screenshot-2025-09-27-235226-removebg-preview.png",
+                socialLinks: [
+                    { icon: "fab fa-github", url: "https://github.com/brosmad123" },
+                    { icon: "fa-solid fa-envelope", url: "mailto:861814@pdsb.net" }
+                ],
+                skills: ["fab fa-html5", "fa-solid fa-pen", "fa-solid fa-calculator"],
+                projects: [
+                    {
+                        id: "gurshaan_history",
+                        title: "Canadian History Project",
+                        description: "Comprehensive history project including worksheet, presentation, and brochure.",
+                        category: "EDUCATION",
+                        image: "https://www.flamingotravels.co.in/_next/image?url=https%3A%2F%2Fimgcdn.flamingotravels.co.in%2FImages%2FCountry%2Fcanada-history-culture.jpg&w=1080&q=75",
+                        isHistoryProject: true
+                    }
+                ]
+            },
+            harman: {
+                name: "Harman Sidhu",
+                greeting: "WELCOME TO THE MATH WORLD",
+                fullName: "Hi, I'm Harman Sidhu, a",
+                typingTexts: ["Scholar.", "Mathematician.", "Analyst."],
+                description: "I am 13 years old, my birthday is on October 24th, 2012. I am great at doing math and giving presentations. My dream school is Harvard.",
+                avatar: "https://w0.peakpx.com/wallpaper/831/147/HD-wallpaper-numbers-mathematics.jpg",
+                socialLinks: [
+                    { icon: "fab fa-github", url: "https://github.com/harman" },
+                    { icon: "fab fa-instagram", url: "https://instagram.com/harman" }
+                ],
+                skills: ["fab fa-python", "fas fa-database", "fas fa-chart-bar"],
+                projects: [
+                    {
+                        id: "harman_demo",
+                        title: "Mathematical Analysis Dashboard",
+                        description: "An interactive dashboard showcasing advanced mathematical concepts and data visualization techniques using Python and statistical analysis.",
+                        category: "DATA SCIENCE",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                        url: "https://github.com/harman/math-dashboard"
+                    }
+                ]
+            },
+            newspaper: {
+                name: "Digital News Hub",
+                greeting: "Weekly School News",
+                fullName: "This is SWG News, ",
+                typingTexts: ["the best newspaper.", "your news source.", "bringing you stories."],
+                description: "We don't just provide news, we provide stories that can alter your perspective. Our information is gathered from many sources.",
+                avatar: "https://cdn.britannica.com/25/93825-050-D1300547/collection-newspapers.jpg",
+                socialLinks: [
+                    { icon: "fab fa-twitter", url: "https://x.com/PeelSchools" },
+                    { icon: "fab fa-instagram", url: "https://www.instagram.com/peelschools" }
+                ],
+                skills: ["fa-solid fa-newspaper"],
+                projects: []
+            }
+        };
+
+        // Current state
+        let currentView = 'home';
+        let typingInterval;
+
+        // Router functionality
+        class Router {
+            constructor() {
+                this.routes = {
+                    '': () => this.showHome(),
+                    'home': () => this.showHome(),
+                    'gurshaan': () => this.showPortfolio('gurshaan'),
+                    'harman': () => this.showPortfolio('harman'),
+                    'newspaper': () => this.showPortfolio('newspaper')
+                };
+                
+                this.init();
+            }
+
+            init() {
+                window.addEventListener('popstate', () => this.handleRoute());
+                this.handleRoute();
+            }
+
+            navigate(path) {
+                history.pushState({}, '', `/#/${path}`);
+                this.handleRoute();
+            }
+
+            handleRoute() {
+                const path = window.location.hash.slice(2) || '';
+                const route = this.routes[path];
+                if (route) {
+                    route();
+                } else {
+                    this.showHome();
+                }
+            }
+
+            showHome() {
+                currentView = 'home';
+                stopTyping();
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="home-container">
+                        <h1 class="title">Portfolio Universe</h1>
+                        <p class="subtitle">Discover amazing work from talented creators</p>
+                        
+                        <div class="nav-grid">
+                            <div class="nav-card" onclick="router.navigate('gurshaan')">
+                                <i class="fas fa-laptop-code card-icon"></i>
+                                <h3 class="card-title">Gurshaan's Portfolio</h3>
+                                <p class="card-description">Discover creative web development and design solutions</p>
+                            </div>
+                            
+                            <div class="nav-card" onclick="router.navigate('harman')">
+                                <i class="fas fa-chart-line card-icon"></i>
+                                <h3 class="card-title">Harman's Portfolio</h3>
+                                <p class="card-description">Explore data-driven insights and innovative analytics projects</p>
+                            </div>
+                            
+                            <div class="nav-card" onclick="router.navigate('newspaper')">
+                                <i class="fas fa-newspaper card-icon"></i>
+                                <h3 class="card-title">Digital Newspaper</h3>
+                                <p class="card-description">Stay updated with the latest news and articles</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            showPortfolio(type) {
+                currentView = type;
+                const data = portfolioData[type];
+                
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="portfolio-container">
+                        <button class="back-btn" onclick="router.navigate('home')">
+                            <i class="fas fa-arrow-left"></i> Back to Home
+                        </button>
+                        
+                        <div class="portfolio-hero">
+                            <div class="portfolio-content">
+                                <div class="portfolio-greeting">${data.greeting}</div>
+                                <h1 class="portfolio-name">${data.fullName}</h1>
+                                <h2 class="portfolio-subtitle" id="typingText">${data.typingTexts[0]}</h2>
+                                <p class="portfolio-description">${data.description}</p>
+                                
+                                <div style="margin-bottom: 2rem;">
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; display: block; margin-bottom: 1rem;">FIND ME ON</span>
+                                    <div class="social-icons">
+                                        ${data.socialLinks.map(social => `
+                                            <a href="${social.url}" class="social-icon" target="_blank">
+                                                <i class="${social.icon}"></i>
+                                            </a>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; display: block; margin-bottom: 1rem;">MY SKILLS</span>
+                                    <div class="skills-icons">
+                                        ${data.skills.map(skill => `
+                                            <div class="skill-icon">
+                                                <i class="${skill}"></i>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="${data.avatar}" alt="${data.name}" class="profile-photo" />
+                            </div>
+                        </div>
+
+                        ${data.projects.length > 0 ? `
+                            <div class="portfolio-sections">
+                                <h2 class="section-title">My Projects</h2>
+                                
+                                <div class="projects-grid">
+                                    ${data.projects.map(project => `
+                                        <div class="project-card" onclick="openProjectModal('${project.id}', '${type}')">
+                                            <div class="project-image">
+                                                <img src="${project.image}" alt="${project.title}" />
+                                                <div class="project-overlay">
+                                                    <div class="project-category">${project.category}</div>
+                                                    <div class="project-likes">
+                                                        <i class="fas fa-heart"></i> 0
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="project-content">
+                                                <h3 class="project-title">${project.title}</h3>
+                                                <p class="project-description">${project.description}</p>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Start typing animation
+                startTyping(data.typingTexts);
+            }
+        }
+
+        // Initialize router
+        const router = new Router();
+
+        // Project Modal Functions
+        function openProjectModal(projectId, portfolioType) {
+            const portfolio = portfolioData[portfolioType];
+            const project = portfolio.projects.find(p => p.id === projectId);
+            
+            if (!project) return;
+            
+            if (project.isHistoryProject) {
+                openHistoryModal();
+                return;
+            }
+            
+            const modal = document.getElementById('projectModal');
+            const title = document.getElementById('projectModalTitle');
+            const subtitle = document.getElementById('projectModalSubtitle');
+            const description = document.getElementById('projectModalDescription');
+            const actions = document.getElementById('projectModalActions');
+            
+            title.textContent = project.title;
+            subtitle.textContent = project.category;
+            description.textContent = project.description;
+            
+            actions.innerHTML = `
+                <button class="project-modal-btn project-modal-button" onclick="window.open('${project.url}', '_blank')">
+                    VIEW PROJECT
+                </button>
+            `;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openHistoryModal() {
+            document.getElementById('historyModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Theme functions
+        function changeTheme(theme) {
+            if (theme === 'custom') {
+                const saved = localStorage.getItem('customTheme');
+                if (saved) {
+                    applyCustomThemeFromData(JSON.parse(saved));
+                } else {
+                    openThemeCreator();
+                    return;
+                }
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            localStorage.setItem('selectedTheme', theme);
+        }
+
+        function openThemeCreator() {
+            document.getElementById('themeCreatorModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setupThemePreview();
+        }
+
+        function closeThemeCreator() {
+            document.getElementById('themeCreatorModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function setupThemePreview() {
+            const inputs = ['bgPrimary', 'bgSecondary', 'textPrimary', 'textSecondary', 'accentColor'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', updatePreview);
+                }
+            });
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const preview = document.getElementById('themePreview');
+            if (!preview) return;
+            
+            const bg1 = document.getElementById('bgPrimary')?.value || '#0f0f23';
+            const bg2 = document.getElementById('bgSecondary')?.value || '#2d1b69';
+            const text1 = document.getElementById('textPrimary')?.value || '#ffffff';
+            const text2 = document.getElementById('textSecondary')?.value || '#b3b3b3';
+            const accent = document.getElementById('accentColor')?.value || '#00d4ff';
+
+            preview.style.background = `linear-gradient(135deg, ${bg1} 0%, ${bg2} 100%)`;
+            preview.style.color = text1;
+            preview.style.border = `1px solid ${accent}`;
+            
+            const h3 = preview.querySelector('h3');
+            const p = preview.querySelector('p');
+            if (h3) h3.style.color = accent;
+            if (p) p.style.color = text2;
+        }
+
+        function applyCustomTheme() {
+            const bg1 = document.getElementById('bgPrimary').value;
+            const bg2 = document.getElementById('bgSecondary').value;
+            const text1 = document.getElementById('textPrimary').value;
+            const text2 = document.getElementById('textSecondary').value;
+            const accent = document.getElementById('accentColor').value;
+            
+            const theme = {
+                '--bg-primary': `linear-gradient(135deg, ${bg1} 0%, ${bg2} 100%)`,
+                '--bg-card': `${hexToRgba(text1, 0.08)}`,
+                '--text-primary': text1,
+                '--text-secondary': text2,
+                '--accent': accent,
+                '--accent-hover': adjustBrightness(accent, -20),
+                '--border': `${hexToRgba(text1, 0.1)}`,
+                '--shadow': 'rgba(0, 0, 0, 0.3)'
+            };
+            
+            applyCustomThemeFromData(theme);
+            localStorage.setItem('customTheme', JSON.stringify(theme));
+            localStorage.setItem('selectedTheme', 'custom');
+            document.getElementById('themeSelector').value = 'custom';
+            closeThemeCreator();
+            
+            showNotification('Custom theme applied!', 'success');
+        }
+
+        function applyCustomThemeFromData(theme) {
+            const root = document.documentElement;
+            Object.keys(theme).forEach(prop => {
+                root.style.setProperty(prop, theme[prop]);
+            });
+        }
+
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function adjustBrightness(hex, percent) {
+            const num = parseInt(hex.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 1rem 2rem;
+                background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                border-radius: 8px;
+                z-index: 4000;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Typing animation
+        function startTyping(texts) {
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const element = document.getElementById('typingText');
+            
+            if (!element) return;
+            
+            function type() {
+                const currentText = texts[textIndex];
+                
+                if (isDeleting) {
+                    element.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    element.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let speed = isDeleting ? 50 : 100;
+
+                if (!isDeleting && charIndex === currentText.length) {
+                    speed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    speed = 500;
+                }
+
+                typingInterval = setTimeout(type, speed);
+            }
+            
+            stopTyping();
+            type();
+        }
+
+        function stopTyping() {
+            if (typingInterval) {
+                clearTimeout(typingInterval);
+                typingInterval = null;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal') || e.target.classList.contains('project-modal')) {
+                e.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Enable audio context on first user interaction
+            if (!window.audioContextStarted) {
+                window.audioContextStarted = true;
+                console.log('User interaction detected - audio enabled');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal, .project-modal');
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up theme selector
+            const themeSelector = document.getElementById('themeSelector');
+            if (themeSelector) {
+                themeSelector.addEventListener('change', function() {
+                    changeTheme(this.value);
+                });
+            }
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
+            if (themeSelector) {
+                themeSelector.value = savedTheme;
+            }
+            changeTheme(savedTheme);
+            
+            console.log('Portfolio Hub loaded successfully!');
+        });
+
+        // Fallback initialization if DOMContentLoaded already fired
+        if (document.readyState === 'loading') {
+            // Do nothing, DOMContentLoaded will fire
+        } else {
+            // DOM already loaded
+            setTimeout(() => {
+                const themeSelector = document.getElementById('themeSelector');
+                if (themeSelector) {
+                    themeSelector.addEventListener('change', function() {
+                        changeTheme(this.value);
+                    });
+                    
+                    const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
+                    themeSelector.value = savedTheme;
+                    changeTheme(savedTheme);
+                }
+                
+                console.log('Portfolio Hub initialized!');
+            }, 100);
+        }
+    </script>
+</body>
+</html>
