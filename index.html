@@ -89,7 +89,6 @@
             background: #5568d3;
         }
         
-        /* Math Game Styles */
         .math-setup, .math-game, .math-results {
             display: none;
         }
@@ -130,7 +129,6 @@
             margin: 10px 0;
         }
         
-        /* Chess Styles */
         .chess-board {
             display: grid;
             grid-template-columns: repeat(8, 60px);
@@ -163,11 +161,6 @@
             background: #7fc97f !important;
         }
         
-        .chess-square.valid-move {
-            background: #fff59d !important;
-        }
-        
-        /* Tic Tac Toe Styles */
         .ttt-board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
@@ -194,7 +187,6 @@
             background: #e0e0e0;
         }
         
-        /* Simon Says Styles */
         .simon-board {
             display: grid;
             grid-template-columns: repeat(2, 150px);
@@ -227,7 +219,6 @@
             opacity: 0.6;
         }
         
-        /* Memory Game Styles */
         .memory-board {
             display: grid;
             grid-template-columns: repeat(4, 100px);
@@ -247,7 +238,6 @@
             justify-content: center;
             font-size: 2em;
             color: white;
-            position: relative;
         }
         
         .memory-card.flipped {
@@ -301,35 +291,34 @@
         <h1>🎮 Game Hub</h1>
         
         <div id="menu" class="menu">
-            <div class="game-card" onclick="showGame('math')">
+            <div class="game-card" data-game="math">
                 <h2>🔢 Math Speed Test</h2>
                 <p>Test your multiplication skills!</p>
             </div>
-            <div class="game-card" onclick="showGame('chess')">
+            <div class="game-card" data-game="chess">
                 <h2>♟️ Chess</h2>
                 <p>Play against bot or 2-player</p>
             </div>
-            <div class="game-card" onclick="showGame('tictactoe')">
+            <div class="game-card" data-game="tictactoe">
                 <h2>❌⭕ Tic Tac Toe</h2>
                 <p>Classic game, AI or 2-player</p>
             </div>
-            <div class="game-card" onclick="showGame('simon')">
+            <div class="game-card" data-game="simon">
                 <h2>🎵 Simon Says</h2>
                 <p>Memory pattern game</p>
             </div>
-            <div class="game-card" onclick="showGame('memory')">
+            <div class="game-card" data-game="memory">
                 <h2>🃏 Memory Match</h2>
                 <p>Find matching pairs</p>
             </div>
-            <div class="game-card" onclick="showGame('reaction')">
+            <div class="game-card" data-game="reaction">
                 <h2>⚡ Reaction Time</h2>
                 <p>Test your reflexes!</p>
             </div>
         </div>
         
-        <!-- Math Game -->
         <div id="math-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <button class="back-btn">← Back to Menu</button>
             <h2>Math Speed Test</h2>
             
             <div class="math-setup active">
@@ -351,7 +340,7 @@
                     <option value="19">19 Times Table</option>
                     <option value="20">20 Times Table</option>
                 </select>
-                <button class="btn" onclick="startMathGame()" style="display: block; margin: 20px auto;">Start Test</button>
+                <button class="btn" id="start-math" style="display: block; margin: 20px auto;">Start Test</button>
             </div>
             
             <div class="math-game">
@@ -364,61 +353,56 @@
             <div class="math-results">
                 <h3 style="text-align: center; margin: 20px 0;">Results</h3>
                 <div id="math-results-content" style="text-align: center; font-size: 1.2em;"></div>
-                <button class="btn" onclick="resetMath()" style="display: block; margin: 20px auto;">Try Again</button>
+                <button class="btn" id="reset-math" style="display: block; margin: 20px auto;">Try Again</button>
             </div>
         </div>
         
-        <!-- Chess Game -->
         <div id="chess-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <button class="back-btn">← Back to Menu</button>
             <h2>Chess</h2>
             <div class="mode-select">
-                <button class="btn" onclick="startChess('2player')">2 Player</button>
-                <button class="btn" onclick="startChess('bot')">vs Bot</button>
+                <button class="btn" data-chess="2player">2 Player</button>
+                <button class="btn" data-chess="bot">vs Bot</button>
             </div>
             <div class="game-info" id="chess-info">Select a mode to start</div>
             <div id="chess-board" class="chess-board"></div>
         </div>
         
-        <!-- Tic Tac Toe -->
         <div id="tictactoe-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <button class="back-btn">← Back to Menu</button>
             <h2>Tic Tac Toe</h2>
             <div class="mode-select">
-                <button class="btn" onclick="startTicTacToe('2player')">2 Player</button>
-                <button class="btn" onclick="startTicTacToe('bot')">vs Bot</button>
+                <button class="btn" data-ttt="2player">2 Player</button>
+                <button class="btn" data-ttt="bot">vs Bot</button>
             </div>
             <div class="game-info" id="ttt-info">Player X's turn</div>
             <div id="ttt-board" class="ttt-board"></div>
-            <button class="btn" onclick="resetTicTacToe()" style="display: block; margin: 20px auto;">New Game</button>
+            <button class="btn" id="reset-ttt" style="display: block; margin: 20px auto;">New Game</button>
         </div>
         
-        <!-- Simon Says -->
         <div id="simon-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <button class="back-btn">← Back to Menu</button>
             <h2>Simon Says</h2>
             <div class="game-info">Level: <span id="simon-level">0</span></div>
-            <div class="simon-board">
+            <div class="simon-board" id="simon-board">
                 <div class="simon-btn red" data-color="red"></div>
                 <div class="simon-btn blue" data-color="blue"></div>
                 <div class="simon-btn green" data-color="green"></div>
                 <div class="simon-btn yellow" data-color="yellow"></div>
             </div>
-            <button class="btn" onclick="startSimon()" style="display: block; margin: 20px auto;">Start Game</button>
+            <button class="btn" id="start-simon" style="display: block; margin: 20px auto;">Start Game</button>
         </div>
         
-        <!-- Memory Game -->
         <div id="memory-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <button class="back-btn">← Back to Menu</button>
             <h2>Memory Match</h2>
             <div class="game-info">Moves: <span id="memory-moves">0</span> | Matches: <span id="memory-matches">0</span>/8</div>
             <div id="memory-board" class="memory-board"></div>
-            <button class="btn" onclick="startMemory()" style="display: block; margin: 20px auto;">New Game</button>
+            <button class="btn" id="start-memory" style="display: block; margin: 20px auto;">New Game</button>
         </div>
         
-        <!-- Reaction Time -->
         <div id="reaction-game" class="game-screen">
-            <button class="back-btn" onclick="showMenu()">← Back to Menu</button>
+            <button class="back-btn">← Back to Menu</button>
             <h2>Reaction Time Test</h2>
             <div id="reaction-area" style="width: 400px; height: 300px; background: #e74c3c; margin: 20px auto; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; color: white; cursor: pointer; text-align: center; padding: 20px;">
                 Click to start
@@ -429,57 +413,50 @@
     </div>
     
     <script>
-        // Global state
-        let currentGame = null;
+        // Game state objects
+        const mathState = { table: 6, currentQ: 0, questions: [], startTime: 0, timer: null };
+        const chessState = { board: [], selected: null, turn: 'white', mode: null };
+        const tttState = { board: Array(9).fill(null), currentPlayer: 'X', mode: null, gameOver: false };
+        const simonState = { sequence: [], playerSequence: [], level: 0, playing: false, canClick: false };
+        const memoryState = { cards: [], flipped: [], matched: [], moves: 0 };
+        const reactionState = { waiting: false, startTime: 0, times: [] };
         
-        // Navigation functions
-        window.showMenu = function() {
-            document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('menu').style.display = 'grid';
+        const chessPieces = {
+            white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
+            black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' }
         };
         
-        window.showGame = function(game) {
+        // Navigation
+        function showMenu() {
+            document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('menu').style.display = 'grid';
+        }
+        
+        function showGame(game) {
             document.getElementById('menu').style.display = 'none';
             document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
             document.getElementById(game + '-game').classList.add('active');
-            currentGame = game;
-        };
+        }
         
-        // Math Speed Test
-        let mathState = {
-            table: 6,
-            currentQ: 0,
-            questions: [],
-            startTime: 0,
-            timer: null
-        };
-        
+        // MATH GAME
         function startMathGame() {
             mathState.table = parseInt(document.getElementById('table-select').value);
             mathState.currentQ = 0;
             mathState.questions = [];
             
             for (let i = 1; i <= 20; i++) {
-                mathState.questions.push({
-                    num1: mathState.table,
-                    num2: i,
-                    answer: mathState.table * i
-                });
+                mathState.questions.push({ num1: mathState.table, num2: i, answer: mathState.table * i });
             }
             
             document.querySelector('.math-setup').classList.remove('active');
             document.querySelector('.math-game').classList.add('active');
-            
             mathState.startTime = Date.now();
-            mathState.timer = setInterval(updateMathTimer, 100);
+            mathState.timer = setInterval(() => {
+                document.getElementById('math-timer').textContent = ((Date.now() - mathState.startTime) / 1000).toFixed(1);
+            }, 100);
             
             showMathQuestion();
             document.getElementById('math-answer').focus();
-        }
-        
-        function updateMathTimer() {
-            const elapsed = (Date.now() - mathState.startTime) / 1000;
-            document.getElementById('math-timer').textContent = elapsed.toFixed(1);
         }
         
         function showMathQuestion() {
@@ -489,25 +466,6 @@
             document.getElementById('math-answer').value = '';
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
-            const answerInput = document.getElementById('math-answer');
-            answerInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const answer = parseInt(answerInput.value);
-                    const q = mathState.questions[mathState.currentQ];
-                    
-                    if (answer === q.answer) {
-                        mathState.currentQ++;
-                        if (mathState.currentQ < mathState.questions.length) {
-                            showMathQuestion();
-                        } else {
-                            endMathGame();
-                        }
-                    }
-                }
-            });
-        });
-        
         function endMathGame() {
             clearInterval(mathState.timer);
             const totalTime = ((Date.now() - mathState.startTime) / 1000).toFixed(1);
@@ -515,7 +473,6 @@
             
             document.querySelector('.math-game').classList.remove('active');
             document.querySelector('.math-results').classList.add('active');
-            
             document.getElementById('math-results-content').innerHTML = `
                 <p>✅ Complete!</p>
                 <p style="margin: 15px 0;">Total Time: ${totalTime} seconds</p>
@@ -523,24 +480,7 @@
             `;
         }
         
-        function resetMath() {
-            document.querySelector('.math-results').classList.remove('active');
-            document.querySelector('.math-setup').classList.add('active');
-        }
-        
-        // Chess Game
-        let chessState = {
-            board: [],
-            selected: null,
-            turn: 'white',
-            mode: null
-        };
-        
-        const chessPieces = {
-            white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
-            black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' }
-        };
-        
+        // CHESS GAME
         function initChessBoard() {
             chessState.board = [
                 ['r','n','b','q','k','b','n','r'],
@@ -554,14 +494,14 @@
             ];
         }
         
-        window.startChess = function(mode) {
+        function startChess(mode) {
             chessState.mode = mode;
             chessState.turn = 'white';
             chessState.selected = null;
             initChessBoard();
             renderChessBoard();
             document.getElementById('chess-info').textContent = "White's turn";
-        };
+        }
         
         function renderChessBoard() {
             const board = document.getElementById('chess-board');
@@ -571,34 +511,23 @@
                 for (let col = 0; col < 8; col++) {
                     const square = document.createElement('div');
                     square.className = 'chess-square ' + ((row + col) % 2 === 0 ? 'light' : 'dark');
-                    square.dataset.row = row;
-                    square.dataset.col = col;
-                    
                     const piece = chessState.board[row][col];
                     if (piece) {
                         const color = piece === piece.toUpperCase() ? 'white' : 'black';
-                        const type = getPieceType(piece);
+                        const type = { 'k': 'king', 'q': 'queen', 'r': 'rook', 'b': 'bishop', 'n': 'knight', 'p': 'pawn' }[piece.toLowerCase()];
                         square.textContent = chessPieces[color][type];
                     }
-                    
-                    square.onclick = () => handleChessClick(row, col);
+                    square.addEventListener('click', () => handleChessClick(row, col));
                     board.appendChild(square);
                 }
             }
         }
         
-        function getPieceType(piece) {
-            const map = { 'k': 'king', 'q': 'queen', 'r': 'rook', 'b': 'bishop', 'n': 'knight', 'p': 'pawn' };
-            return map[piece.toLowerCase()];
-        }
-        
         function handleChessClick(row, col) {
             if (!chessState.mode) return;
-            
             const piece = chessState.board[row][col];
             
             if (chessState.selected) {
-                // Try to move
                 if (isValidChessMove(chessState.selected.row, chessState.selected.col, row, col)) {
                     chessState.board[row][col] = chessState.board[chessState.selected.row][chessState.selected.col];
                     chessState.board[chessState.selected.row][chessState.selected.col] = null;
@@ -614,51 +543,18 @@
                     chessState.selected = null;
                     renderChessBoard();
                 }
-            } else if (piece && isPlayerPiece(piece)) {
+            } else if (piece && ((chessState.turn === 'white' && piece === piece.toUpperCase()) || (chessState.turn === 'black' && piece === piece.toLowerCase()))) {
                 chessState.selected = { row, col };
                 renderChessBoard();
-                document.querySelector(`[data-row="${row}"][data-col="${col}"]`).classList.add('selected');
-            }
-        }
-        
-        function isPlayerPiece(piece) {
-            if (chessState.turn === 'white') {
-                return piece === piece.toUpperCase();
-            } else {
-                return piece === piece.toLowerCase();
+                document.querySelector(`#chess-board .chess-square:nth-child(${row * 8 + col + 1})`).classList.add('selected');
             }
         }
         
         function isValidChessMove(r1, c1, r2, c2) {
             const piece = chessState.board[r1][c1];
             const target = chessState.board[r2][c2];
-            
-            // Can't capture own piece
-            if (target && isPlayerPiece(target)) return false;
-            
-            // Basic move validation (simplified)
-            const type = getPieceType(piece);
-            const dr = Math.abs(r2 - r1);
-            const dc = Math.abs(c2 - c1);
-            
-            if (type === 'pawn') {
-                const dir = piece === piece.toUpperCase() ? -1 : 1;
-                if (c1 === c2 && !target) {
-                    return r2 === r1 + dir;
-                }
-            } else if (type === 'rook') {
-                return (r1 === r2 || c1 === c2);
-            } else if (type === 'knight') {
-                return (dr === 2 && dc === 1) || (dr === 1 && dc === 2);
-            } else if (type === 'bishop') {
-                return dr === dc;
-            } else if (type === 'queen') {
-                return (r1 === r2 || c1 === c2 || dr === dc);
-            } else if (type === 'king') {
-                return dr <= 1 && dc <= 1;
-            }
-            
-            return true;
+            if (target && ((chessState.turn === 'white' && target === target.toUpperCase()) || (chessState.turn === 'black' && target === target.toLowerCase()))) return false;
+            return true; // Simplified validation
         }
         
         function makeChessBotMove() {
@@ -688,14 +584,7 @@
             }
         }
         
-        // Tic Tac Toe
-        let tttState = {
-            board: Array(9).fill(null),
-            currentPlayer: 'X',
-            mode: null,
-            gameOver: false
-        };
-        
+        // TIC TAC TOE
         function startTicTacToe(mode) {
             tttState.mode = mode;
             tttState.board = Array(9).fill(null);
@@ -713,7 +602,7 @@
                 const cell = document.createElement('div');
                 cell.className = 'ttt-cell';
                 cell.textContent = tttState.board[i] || '';
-                cell.onclick = () => handleTttClick(i);
+                cell.addEventListener('click', () => handleTttClick(i));
                 board.appendChild(cell);
             }
         }
@@ -745,12 +634,7 @@
         }
         
         function checkTttWinner() {
-            const wins = [
-                [0,1,2], [3,4,5], [6,7,8],
-                [0,3,6], [1,4,7], [2,5,8],
-                [0,4,8], [2,4,6]
-            ];
-            
+            const wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
             for (const [a, b, c] of wins) {
                 if (tttState.board[a] && tttState.board[a] === tttState.board[b] && tttState.board[a] === tttState.board[c]) {
                     return true;
@@ -762,51 +646,31 @@
         function makeTttBotMove() {
             const empty = tttState.board.map((v, i) => v === null ? i : null).filter(v => v !== null);
             if (empty.length > 0 && !tttState.gameOver) {
-                const move = empty[Math.floor(Math.random() * empty.length)];
-                handleTttClick(move);
+                handleTttClick(empty[Math.floor(Math.random() * empty.length)]);
             }
         }
         
-        function resetTicTacToe() {
-            if (tttState.mode) {
-                startTicTacToe(tttState.mode);
-            }
-        }
-        
-        // Simon Says
-        let simonState = {
-            sequence: [],
-            playerSequence: [],
-            level: 0,
-            playing: false,
-            canClick: false
-        };
-        
-        const colors = ['red', 'blue', 'green', 'yellow'];
-        
-        window.startSimon = function() {
+        // SIMON SAYS
+        function startSimon() {
             simonState.sequence = [];
             simonState.playerSequence = [];
             simonState.level = 0;
             simonState.playing = true;
             nextSimonLevel();
-        };
+        }
         
         function nextSimonLevel() {
             simonState.level++;
             simonState.playerSequence = [];
             document.getElementById('simon-level').textContent = simonState.level;
-            
-            const newColor = colors[Math.floor(Math.random() * colors.length)];
-            simonState.sequence.push(newColor);
-            
+            const colors = ['red', 'blue', 'green', 'yellow'];
+            simonState.sequence.push(colors[Math.floor(Math.random() * 4)]);
             playSimonSequence();
         }
         
         function playSimonSequence() {
             simonState.canClick = false;
             let i = 0;
-            
             const interval = setInterval(() => {
                 if (i < simonState.sequence.length) {
                     flashSimonButton(simonState.sequence[i]);
@@ -824,46 +688,33 @@
             setTimeout(() => btn.classList.remove('active'), 400);
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.simon-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (!simonState.canClick || !simonState.playing) return;
-                    
-                    const color = btn.dataset.color;
-                    flashSimonButton(color);
-                    simonState.playerSequence.push(color);
-                    
-                    const index = simonState.playerSequence.length - 1;
-                    if (simonState.playerSequence[index] !== simonState.sequence[index]) {
-                        simonState.playing = false;
-                        simonState.canClick = false;
-                        alert(`Game Over! You reached level ${simonState.level}`);
-                    } else if (simonState.playerSequence.length === simonState.sequence.length) {
-                        simonState.canClick = false;
-                        setTimeout(nextSimonLevel, 1000);
-                    }
-                });
-            });
-        });
+        function handleSimonClick(color) {
+            if (!simonState.canClick || !simonState.playing) return;
+            
+            flashSimonButton(color);
+            simonState.playerSequence.push(color);
+            
+            const index = simonState.playerSequence.length - 1;
+            if (simonState.playerSequence[index] !== simonState.sequence[index]) {
+                simonState.playing = false;
+                simonState.canClick = false;
+                alert(`Game Over! You reached level ${simonState.level}`);
+            } else if (simonState.playerSequence.length === simonState.sequence.length) {
+                simonState.canClick = false;
+                setTimeout(nextSimonLevel, 1000);
+            }
+        }
         
-        // Memory Game
-        let memoryState = {
-            cards: [],
-            flipped: [],
-            matched: [],
-            moves: 0
-        };
-        
-        window.startMemory = function() {
+        // MEMORY GAME
+        function startMemory() {
             const symbols = ['🎮', '🎯', '🎲', '🎪', '🎨', '🎭', '🎸', '🎺'];
             memoryState.cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
             memoryState.flipped = [];
             memoryState.matched = [];
             memoryState.moves = 0;
-            
             updateMemoryInfo();
             renderMemory();
-        };
+        }
         
         function renderMemory() {
             const board = document.getElementById('memory-board');
@@ -872,124 +723,13 @@
             memoryState.cards.forEach((symbol, index) => {
                 const card = document.createElement('div');
                 card.className = 'memory-card';
-                card.dataset.index = index;
                 
                 if (memoryState.flipped.includes(index) || memoryState.matched.includes(index)) {
                     card.classList.add('flipped');
                     card.textContent = symbol;
                 }
-                
                 if (memoryState.matched.includes(index)) {
                     card.classList.add('matched');
                 }
                 
-                card.onclick = () => handleMemoryClick(index);
-                board.appendChild(card);
-            });
-        }
-        
-        function handleMemoryClick(index) {
-            if (memoryState.flipped.length === 2) return;
-            if (memoryState.flipped.includes(index)) return;
-            if (memoryState.matched.includes(index)) return;
-            
-            memoryState.flipped.push(index);
-            renderMemory();
-            
-            if (memoryState.flipped.length === 2) {
-                memoryState.moves++;
-                updateMemoryInfo();
-                
-                const [i1, i2] = memoryState.flipped;
-                if (memoryState.cards[i1] === memoryState.cards[i2]) {
-                    memoryState.matched.push(i1, i2);
-                    memoryState.flipped = [];
-                    
-                    if (memoryState.matched.length === 16) {
-                        setTimeout(() => {
-                            alert(`Congratulations! You won in ${memoryState.moves} moves!`);
-                        }, 500);
-                    }
-                } else {
-                    setTimeout(() => {
-                        memoryState.flipped = [];
-                        renderMemory();
-                    }, 1000);
-                }
-            }
-        }
-        
-        function updateMemoryInfo() {
-            document.getElementById('memory-moves').textContent = memoryState.moves;
-            document.getElementById('memory-matches').textContent = memoryState.matched.length / 2;
-        }
-        
-        // Reaction Time Game
-        let reactionState = {
-            waiting: false,
-            startTime: 0,
-            times: []
-        };
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const area = document.getElementById('reaction-area');
-            
-            area.addEventListener('click', () => {
-                if (reactionState.waiting) {
-                    const reactionTime = Date.now() - reactionState.startTime;
-                    reactionState.times.push(reactionTime);
-                    
-                    area.style.background = '#e74c3c';
-                    area.textContent = `${reactionTime}ms`;
-                    reactionState.waiting = false;
-                    
-                    if (reactionState.times.length < 5) {
-                        document.getElementById('reaction-info').textContent = `Round ${reactionState.times.length}/5 complete. Click to continue.`;
-                        setTimeout(() => {
-                            area.textContent = 'Click to continue';
-                        }, 1500);
-                    } else {
-                        const avg = Math.round(reactionState.times.reduce((a, b) => a + b) / 5);
-                        document.getElementById('reaction-info').textContent = 'Test complete!';
-                        document.getElementById('reaction-results').innerHTML = `
-                            <h3>Your Results:</h3>
-                            <p>Average reaction time: <strong>${avg}ms</strong></p>
-                            <p>Best: ${Math.min(...reactionState.times)}ms</p>
-                            <p>Worst: ${Math.max(...reactionState.times)}ms</p>
-                            <button class="btn" onclick="resetReaction()">Try Again</button>
-                        `;
-                        area.style.display = 'none';
-                    }
-                } else if (!area.style.display || area.style.display !== 'none') {
-                    startReactionRound();
-                }
-            });
-        });
-        
-        function startReactionRound() {
-            const area = document.getElementById('reaction-area');
-            area.style.background = '#e74c3c';
-            area.textContent = 'Wait for green...';
-            document.getElementById('reaction-info').textContent = 'Wait for it...';
-            
-            const delay = Math.random() * 3000 + 1000;
-            
-            setTimeout(() => {
-                area.style.background = '#2ecc71';
-                area.textContent = 'CLICK NOW!';
-                reactionState.waiting = true;
-                reactionState.startTime = Date.now();
-                document.getElementById('reaction-info').textContent = 'Click as fast as you can!';
-            }, delay);
-        }
-        
-        function resetReaction() {
-            reactionState.times = [];
-            reactionState.waiting = false;
-            const area = document.getElementById('reaction-area');
-            area.style.display = 'flex';
-            area.style.background = '#e74c3c';
-            area.textContent = 'Click to start';
-            document.getElementById('reaction-info').textContent = 'Click the red box to begin';
-            document.getElementById('reaction-results').innerHTML = '';
-        }
+                car
