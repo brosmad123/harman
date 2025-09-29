@@ -432,18 +432,18 @@
         // Global state
         let currentGame = null;
         
-        // Navigation
-        function showMenu() {
+        // Navigation functions
+        window.showMenu = function() {
             document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
             document.getElementById('menu').style.display = 'grid';
-        }
+        };
         
-        function showGame(game) {
+        window.showGame = function(game) {
             document.getElementById('menu').style.display = 'none';
             document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
             document.getElementById(game + '-game').classList.add('active');
             currentGame = game;
-        }
+        };
         
         // Math Speed Test
         let mathState = {
@@ -554,14 +554,14 @@
             ];
         }
         
-        function startChess(mode) {
+        window.startChess = function(mode) {
             chessState.mode = mode;
             chessState.turn = 'white';
             chessState.selected = null;
             initChessBoard();
             renderChessBoard();
             document.getElementById('chess-info').textContent = "White's turn";
-        }
+        };
         
         function renderChessBoard() {
             const board = document.getElementById('chess-board');
@@ -784,13 +784,13 @@
         
         const colors = ['red', 'blue', 'green', 'yellow'];
         
-        function startSimon() {
+        window.startSimon = function() {
             simonState.sequence = [];
             simonState.playerSequence = [];
             simonState.level = 0;
             simonState.playing = true;
             nextSimonLevel();
-        }
+        };
         
         function nextSimonLevel() {
             simonState.level++;
@@ -854,7 +854,7 @@
             moves: 0
         };
         
-        function startMemory() {
+        window.startMemory = function() {
             const symbols = ['🎮', '🎯', '🎲', '🎪', '🎨', '🎭', '🎸', '🎺'];
             memoryState.cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
             memoryState.flipped = [];
@@ -863,7 +863,7 @@
             
             updateMemoryInfo();
             renderMemory();
-        }
+        };
         
         function renderMemory() {
             const board = document.getElementById('memory-board');
